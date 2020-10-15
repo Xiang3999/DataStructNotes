@@ -1,57 +1,57 @@
 #include<stdio.h>
 #include<stdlib.h>
-typedef struct ListNode{
+typedef struct ListNode {
 	int val;
-    struct ListNode *next;
+	struct ListNode* next;
 }ListNode;
-
-ListNode *Enqueue(ListNode * rear,int x){
-	ListNode * p=(ListNode *)malloc(sizeof(ListNode));
-	p->val=x;
-	if(rear==NULL){
-		rear=p;
-		rear->next=p;
+//使用双重指针来修改*ptr,**ptr的值，以达到修改头节点的目的
+void Enqueue(ListNode** ptr, int x) {
+	ListNode* p = (ListNode*)malloc(sizeof(ListNode));
+	p->val = x;
+	if ((*ptr) == NULL) {
+		(*ptr) = p;
+		(*ptr)->next = p;
 	}
-	else{
-		p->next=rear->next;
-		rear->next=p;
-		rear=p;
+	else {
+		p->next = (*ptr)->next;
+		(*ptr)->next = p;
+		(*ptr) = p;
 	}
-	return rear;
 }
 
-int Dequeue(ListNode *rear){
-	if (rear==NULL) {printf("error"); return 0;}
-	else{
-		ListNode * p;
-		p=rear->next;
+int Dequeue(ListNode** ptr) {
+	if ((*ptr)==NULL) { printf("error"); return 0; }
+	else {
+		ListNode* p;
+		p = (*ptr)->next;
 		int temp;
-		if(p==rear){
-			temp=p->val;
-			free(rear);
-			rear=NULL;
-			printf("test");
+		if (p == (*ptr)) {
+			temp = p->val;
+			free(*ptr);
+			*ptr = NULL;
 		}
-		else{
-			rear->next=p->next;
-			temp=p->val;
-			free(p);	
+		else {
+			(*ptr)->next = p->next;
+			temp = p->val;
+			free(p);
 		}
-		
+
 		return temp;
 	}
 }
 
-int main(){
-	ListNode *rear;
-	rear=NULL;
-	rear=Enqueue(rear,1);
-	rear=Enqueue(rear,2);
-	rear=Enqueue(rear,13);
-	printf("%d  ",Dequeue(rear));
-	printf("%d  ",Dequeue(rear));
-	printf("%d  ",Dequeue(rear));
-	printf("%d  ",Dequeue( rear));
-	printf("%d  ",Dequeue( rear));
+int main() {
+	ListNode* rear;
+	ListNode** ptr;
+	ptr = &rear;
+	rear = NULL;
+	Enqueue(ptr,1);
+	Enqueue(ptr, 2);
+	Enqueue(ptr, 13);
+	printf("%d  ", Dequeue(ptr));
+	printf("%d  ", Dequeue(ptr));
+	printf("%d  ", Dequeue(ptr));
+	printf("%d  ", Dequeue(ptr));
+	printf("%d  ", Dequeue(ptr));
 	return 0;
 }
